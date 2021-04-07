@@ -1,9 +1,10 @@
-#include <iostream>
-using namespace std;
+#include "../header/mainFunc.h"
 
 int main()
 {
-    cout << "material management" << endl;
-    system("pause");
+    srand(time(NULL)); // reset gia tri cho rand()
+
+    menu();
+    getch();
     return 0;
 }
