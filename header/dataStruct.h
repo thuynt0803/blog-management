@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <cstdlib> // rand, srand
+#include <ctime>   
+#include <conio.h>
 
 using namespace std;
 
