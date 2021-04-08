@@ -3,29 +3,41 @@
 #pragma once
 #include "./dataStruct.h"
 #include "./auxiliaryFunc.h"
+#include "./doc_ghi_file.h"
 
 // ============= khai bao nguyen mau ham - them =============
 void insertVatTu(DS_VAT_TU &ds_vt);
 string createMaTV(DS_VAT_TU &ds_vt);
-int checkDuplicate(string a, DS_VAT_TU &ds_vt);
-
+int checkDuplicateMaVT(string a, DS_VAT_TU &ds_vt);
 // ============= khai bao nguyen mau ham - xuat =============
 void outputDSVT(DS_VAT_TU ds_vt);
+// ============= khai bao nguyen mau ham - xoa ==============
+void deleteVT(DS_VAT_TU &ds_vt);
+int checkMaVT(string a, DS_VAT_TU ds_vt);
+// ============= khai bao nguyen mau ham - sua ==============
+void editVT(DS_VAT_TU ds_vt);
 
-// ======================= menu =======================
+// ======================= MENU =======================
 void menu()
 {
+    //========== khai bao bien ===========
     DS_VAT_TU ds_vt;
     bool kt = true;
+    //========== load file ===============
+    readFileDSVT(ds_vt);
+    //========== xu ly menu ==============
     while (kt == true)
     {
         system("cls");
         cout << "1. Them vat tu." << endl;
         cout << "2. Xuat danh sach vat tu." << endl;
+        cout << "3. Xoa vat tu." << endl;
+        cout << "4. Chinh sua vat tu." << endl;
         cout << "0. Thoat." << endl;
+        cout << "=====================================" << endl;
 
         int luachon;
-        cout << "Nhap lua chon: ";
+        cout << "\n- Nhap lua chon: ";
         cin >> luachon;
 
         switch (luachon)
@@ -51,9 +63,36 @@ void menu()
             system("pause");
             break;
         }
+        case 3:
+        {
+            if (ds_vt.sl == 0)
+            {
+                cout << "\nXoa khong thanh cong, data rong!" << endl;
+                system("pause");
+            }
+            else
+            {
+                deleteVT(ds_vt);
+            }
+            break;
+        }
+        case 4:
+        {
+            if (ds_vt.sl == 0)
+            {
+                cout << "\nData rong!" << endl;
+                system("pause");
+            }
+            else
+            {
+                editVT(ds_vt);
+            }
+            break;
+        }
         case 0:
         {
             kt = false;
+            cout << "\tDONE!";
             break;
         }
         }
@@ -65,12 +104,12 @@ void insertVatTu(DS_VAT_TU &ds_vt)
 {
     VAT_TU *p = new VAT_TU;
     p->ma_vt = createMaTV(ds_vt);
-    cout << "\nNhap ten vat tu: ";
+    cout << "\n\tNhap ten vat tu: ";
     cin.ignore();
     getline(cin, p->ten_vt);
-    cout << "Nhap don vi tinh: ";
+    cout << "\tNhap don vi tinh: ";
     getline(cin, p->don_vi_tinh);
-    cout << "Nhap so luong ton: ";
+    cout << "\tNhap so luong ton: ";
     cin >> p->so_luong_ton;
     // ------ chuan hoa ki tu nhap --------------
     chuan_hoa_ki_tu(p->ma_vt);
@@ -91,11 +130,11 @@ string createMaTV(DS_VAT_TU &ds_vt)
             // a co kieu string --> 1 phan tu trong a la 1 ki tu --> nhan gia tri character --> so 9 = 57, so 0 = 48 (ma ASCII)
             a[i] = rand() % (57 - 48 + 1) + 48;
         }
-    } while (checkDuplicate(a, ds_vt) >= 0);
+    } while (checkDuplicateMaVT(a, ds_vt) >= 0);
     return a;
 }
 
-int checkDuplicate(string a, DS_VAT_TU &ds_vt)
+int checkDuplicateMaVT(string a, DS_VAT_TU &ds_vt)
 {
     for (int i = 0; i < ds_vt.sl; i++)
     {
@@ -114,5 +153,87 @@ void outputDSVT(DS_VAT_TU ds_vt)
     for (int i = 0; i < ds_vt.sl; i++)
     {
         cout << "\t" << ds_vt.ds[i]->ma_vt << "\t\t\t  " << ds_vt.ds[i]->ten_vt << "\t\t   " << ds_vt.ds[i]->don_vi_tinh << "\t\t\t" << ds_vt.ds[i]->so_luong_ton << endl;
+    }
+}
+
+// ======================= xoa vat tu =======================
+void deleteVT(DS_VAT_TU &ds_vt)
+{
+    cout << "\n\t1. Neu vat tu da duoc lap hoa don thi khong the xoa." << endl;
+    string a;
+    cout << "\t2. Nhap ma vat tu: ";
+    cin >> a;
+    // viet ham chuan hoa ki tu sau khi nhap
+    // chuan_hoa_ki_tu(a);
+    //=========== xu ly xoa vat tu ===========
+    int vt = checkMaVT(a, ds_vt);
+    // ------ xoa -------
+    // b1: di chuyen
+    if (vt < 0)
+    {
+        cout << "\n\tNOTE: Vat tu khong ton tai hoac da duoc lap hoa don!" << endl;
+        system("pause");
+    }
+    else
+    {
+        for (int i = vt; i < ds_vt.sl - 1; i++)
+        {
+            ds_vt.ds[i]->ma_vt = ds_vt.ds[i + 1]->ma_vt;
+            ds_vt.ds[i]->ten_vt = ds_vt.ds[i + 1]->ten_vt;
+            ds_vt.ds[i]->don_vi_tinh = ds_vt.ds[i + 1]->don_vi_tinh;
+            ds_vt.ds[i]->so_luong_ton = ds_vt.ds[i + 1]->so_luong_ton;
+            ds_vt.ds[i]->kt = ds_vt.ds[i + 1]->kt;
+        }
+        // b2: giam so luong
+        VAT_TU *temp = ds_vt.ds[ds_vt.sl - 1];
+        ds_vt.sl--;
+        cout << "\tNOTE: Da xoa thanh cong!" << endl;
+        system("pause");
+    }
+}
+
+int checkMaVT(string a, DS_VAT_TU ds_vt)
+{
+    for (int i = 0; i < ds_vt.sl; i++)
+    {
+        // kiem tra mavt duoc nhap co ton tai trong danh sach khong?
+        if (ds_vt.ds[i]->ma_vt == a)
+        {
+            // kiem tra xem mavt chua duoc lap hoa don
+            if (ds_vt.ds[i]->kt == false)
+            {
+                return i;
+            }
+        }
+    }
+    return -1; // mavt khong ton tai hoac da duoc lap hoa don
+}
+
+// ============= hieu chinh (sua) vat tu =============
+void editVT(DS_VAT_TU ds_vt)
+{
+    string a;
+    cout << "\n\tNhap ma vat tu can sua: ";
+    cin >> a;
+
+    //========== kiem tra mavt ==========
+    int vt = checkDuplicateMaVT(a, ds_vt);
+    if (vt < 0)
+    {
+        cout << "\n\tNOTE: Ma vat tu khong ton tai!" << endl;
+        system("pause");
+    }
+    else
+    {
+        //=========== hieu chinh ============
+        cout << "\tTen vat tu thay doi: ";
+        cin.ignore();
+        getline(cin, ds_vt.ds[vt]->ten_vt);
+        cout << "\tDon vi tinh thay doi: ";
+        getline(cin, ds_vt.ds[vt]->don_vi_tinh);
+        chuan_hoa_ki_tu(ds_vt.ds[vt]->ten_vt);
+        chuan_hoa_ki_tu(ds_vt.ds[vt]->don_vi_tinh);
+        cout << "\tNOTE: Da thay doi thong tin vat tu!" << endl;
+        system("pause");
     }
 }

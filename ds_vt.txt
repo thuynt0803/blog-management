@@ -1,0 +1,4 @@
+VT0234,Vat Tu 1,Cai,17,0
+VT0345,Vat Tu 2,Cai,22,0
+VT0456,Vat Tu 3,Kg,15.6,0
+VT0567,Vat Tu 4,Kg,22.1,0

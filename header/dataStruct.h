@@ -2,8 +2,9 @@
 #include <iostream>
 #include <string>
 #include <cstdlib> // rand, srand
-#include <ctime>   
+#include <ctime>
 #include <conio.h>
+#include <fstream>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ struct vat_tu
     string ten_vt;
     string don_vi_tinh;
     float so_luong_ton;
+    bool kt; // kiem tra vat tu da duoc lap hoa don hay chua: true - da duoc lap hoa don (khong the xoa); false - chua duoc lap hoa don (co the xoa)
 };
 typedef struct vat_tu VAT_TU;
 
