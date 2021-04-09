@@ -16,12 +16,22 @@ void deleteVT(DS_VAT_TU &ds_vt);
 int checkMaVT(string a, DS_VAT_TU ds_vt);
 // ============= khai bao nguyen mau ham - sua ==============
 void editVT(DS_VAT_TU ds_vt);
+// ============ khoi tao node - nhan vien ===============
+nhan_vien *init_node_nhan_vien();
+// ========== nhap nhan vien ===========
+void inputNV(DS_NHAN_VIEN &ds_nv);
+// ========== them 1 nhan vien =============
+void insert1NV(tree &t, nhan_vien *p);
+// ============= tao ma nhan vien ==========
+int createMaNV(tree t);
+bool checkDuplicateMaNV(tree t, int ma);
 
 // ======================= MENU =======================
 void menu()
 {
     //========== khai bao bien ===========
     DS_VAT_TU ds_vt;
+    DS_NHAN_VIEN ds_nv;
     bool kt = true;
     //========== load file ===============
     readFileDSVT(ds_vt);
@@ -33,6 +43,8 @@ void menu()
         cout << "2. Xuat danh sach vat tu." << endl;
         cout << "3. Xoa vat tu." << endl;
         cout << "4. Chinh sua vat tu." << endl;
+        cout << "5. Nhap nhan vien." << endl;
+        cout << "6. ." << endl;
         cout << "0. Thoat." << endl;
         cout << "=====================================" << endl;
 
@@ -87,6 +99,11 @@ void menu()
             {
                 editVT(ds_vt);
             }
+            break;
+        }
+        case 5:
+        {
+            inputNV(ds_nv);
             break;
         }
         case 0:
@@ -235,5 +252,86 @@ void editVT(DS_VAT_TU ds_vt)
         chuan_hoa_ki_tu(ds_vt.ds[vt]->don_vi_tinh);
         cout << "\tNOTE: Da thay doi thong tin vat tu!" << endl;
         system("pause");
+    }
+}
+
+// ========== khoi tao node nhan vien ===========
+nhan_vien *init_node_nhan_vien()
+{
+    nhan_vien *p = new nhan_vien;
+    p->pleft = NULL;
+    p->pright = NULL;
+    return p;
+}
+
+// ========== nhap nhan vien ===========
+void inputNV(DS_NHAN_VIEN &ds_nv)
+{
+    nhan_vien *p = init_node_nhan_vien();
+    cin.ignore();
+    cout << "Nhap ho: ";
+    getline(cin, p->ho);
+    cout << "Nhap ten: ";
+    getline(cin, p->ten);
+    cout << "Nhap gioi tinh: ";
+    getline(cin, p->gioitinh);
+    // cin.ignore();
+    p->ma_nv = createMaNV(ds_nv.TREE);
+    insert1NV(ds_nv.TREE, p);
+    ds_nv.sl++;
+}
+
+// ========== them 1 nhan vien =============
+void insert1NV(tree &t, nhan_vien *p)
+{
+    if (t == NULL)
+    {
+        t = p;
+    }
+    else
+    {
+        if (p->ma_nv > t->ma_nv)
+        {
+            insert1NV(t->pright, p);
+        }
+        else if (p->ma_nv < t->ma_nv)
+        {
+            insert1NV(t->pleft, p);
+        }
+    }
+}
+
+// ============= tao ma nhan vien ==========
+int createMaNV(tree t)
+{
+    int ma; // ma nam trong khoang tu 100 - 999
+    do
+    {
+        ma = rand() % (999 - 100 + 1) + 100;
+    } while (checkDuplicateMaNV(t, ma) == 1);
+    return ma;
+}
+
+bool checkDuplicateMaNV(tree t, int ma)
+{
+    //su dung de quy
+    if (t == NULL)
+    {
+        return 0; 
+    }
+    else
+    {
+        if (t->ma_nv == ma)
+        {
+            return 1; 
+        }
+        else if (t->ma_nv < ma)
+        {
+            checkDuplicateMaNV(t->pright, ma);
+        }
+        else
+        {
+            checkDuplicateMaNV(t->pleft, ma);
+        }
     }
 }

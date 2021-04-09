@@ -81,7 +81,7 @@ typedef struct nhan_vien *tree;
 
 struct ds_nhan_vien
 {
-    tree ds = NULL;
+    tree TREE = NULL;
     int sl = 0;
 };
 typedef struct ds_nhan_vien DS_NHAN_VIEN;
