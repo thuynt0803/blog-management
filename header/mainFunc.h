@@ -317,13 +317,13 @@ bool checkDuplicateMaNV(tree t, int ma)
     //su dung de quy
     if (t == NULL)
     {
-        return 0; 
+        return 0;
     }
     else
     {
         if (t->ma_nv == ma)
         {
-            return 1; 
+            return 1;
         }
         else if (t->ma_nv < ma)
         {
@@ -334,4 +334,5 @@ bool checkDuplicateMaNV(tree t, int ma)
             checkDuplicateMaNV(t->pleft, ma);
         }
     }
+    return 1;
 }
